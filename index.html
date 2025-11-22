@@ -1,0 +1,1988 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>GigaShield – Visual</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    :root {
+      --bg-main: #050816;
+      --bg-elevated: #050816;
+      --bg-card: #0b1020;
+      --bg-card-soft: #020617;
+      --accent-purple: #a855f7;
+      --accent-purple-soft: rgba(168, 85, 247, 0.18);
+      --accent-blue: #38bdf8;
+      --accent-blue-soft: rgba(56, 189, 248, 0.16);
+      --accent-pink: #ec4899;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border-soft: rgba(148, 163, 184, 0.45);
+      --danger: #fb7185;
+      --success: #4ade80;
+      --radius-lg: 18px;
+      --radius-full: 999px;
+      --shadow-soft: 0 20px 45px rgba(15, 23, 42, 0.75);
+      --shadow-glow: 0 0 40px rgba(129, 140, 248, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(129, 140, 248, 0.3), transparent 55%),
+        radial-gradient(circle at top right, rgba(56, 189, 248, 0.25), transparent 60%),
+        radial-gradient(circle at bottom, #020617, #020617 75%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 1480px;
+      margin: 14px auto;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 270px minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 1024px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+        margin: 0;
+      }
+    }
+
+    .sidebar {
+      position: relative;
+      border-radius: var(--radius-lg);
+      background: radial-gradient(circle at top, rgba(129, 140, 248, 0.18), transparent 60%),
+                  linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(3, 7, 18, 0.98));
+      border: 1px solid rgba(148, 163, 184, 0.65);
+      box-shadow: var(--shadow-soft);
+      padding: 16px 14px 12px;
+      overflow: hidden;
+    }
+
+    .sidebar-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      height: 100%;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .brand-main {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    @keyframes floatGlow {
+      0% { transform: translateY(0); box-shadow: 0 0 30px rgba(129, 140, 248, 0.7); }
+      50% { transform: translateY(-2px); box-shadow: 0 0 40px rgba(56, 189, 248, 0.8); }
+      100% { transform: translateY(0); box-shadow: 0 0 30px rgba(129, 140, 248, 0.7); }
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 14px;
+      background:
+        radial-gradient(circle at 20% 0%, #38bdf8, transparent 55%),
+        radial-gradient(circle at 80% 100%, #a855f7, transparent 60%),
+        #020617;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: 0.09em;
+      animation: floatGlow 4s ease-in-out infinite;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .brand-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .pill {
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.96);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: radial-gradient(circle, #22c55e, #15803d);
+      box-shadow: 0 0 14px rgba(34, 197, 94, 0.9);
+    }
+
+    .sidebar-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      padding: 4px 10px;
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.13s ease;
+    }
+
+    .chip span.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.7);
+    }
+
+    .chip.active {
+      background: radial-gradient(circle at top left, rgba(129, 140, 248, 0.6), rgba(15, 23, 42, 1));
+      border-color: rgba(129, 140, 248, 0.95);
+      color: #f9fafb;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .chip.active span.dot {
+      background: var(--accent-blue);
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.9);
+    }
+
+    .divider {
+      height: 1px;
+      width: 100%;
+      background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.8), transparent);
+      border-radius: 999px;
+      margin: 4px 0;
+    }
+
+    .small-card {
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: radial-gradient(circle at top left, rgba(168, 85, 247, 0.18), transparent 65%),
+                  radial-gradient(circle at bottom right, rgba(15, 23, 42, 0.98), #020617 85%);
+      padding: 10px 11px;
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .small-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .badge {
+      padding: 2px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(56, 189, 248, 0.8);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: #e5e7eb;
+      background: rgba(15, 23, 42, 0.92);
+    }
+
+    .small-highlight {
+      font-size: 13px;
+      color: #f9fafb;
+    }
+
+    .small-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .summary-pill {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.65);
+      padding: 6px 8px;
+      font-size: 11px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .summary-pill span.value {
+      font-weight: 600;
+      color: #f9fafb;
+    }
+
+    .legend-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+    }
+
+    .legend-dot.accept {
+      background: rgba(34, 197, 94, 0.9);
+    }
+
+    .legend-dot.drop {
+      background: rgba(248, 113, 113, 0.9);
+    }
+
+    .legend-dot.other {
+      background: rgba(56, 189, 248, 0.9);
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 8px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.4);
+      font-size: 10px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .sidebar-footer a {
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    .sidebar-footer a:hover {
+      text-decoration: underline;
+    }
+
+    .main {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .toolbar {
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(6, 12, 31, 0.98));
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: var(--shadow-soft);
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .toolbar:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.95);
+    }
+
+    @media (max-width: 768px) {
+      .toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    .toolbar-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .toolbar-title {
+      font-size: 15px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toolbar-chip {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.65);
+      padding: 2px 8px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+    }
+
+    .toolbar-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 13px;
+      font-size: 12px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.13s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+      color: #020617;
+      box-shadow: 0 14px 32px rgba(56, 189, 248, 0.6);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px) scale(1.01);
+      box-shadow: 0 18px 40px rgba(56, 189, 248, 0.8);
+    }
+
+    .btn-ghost {
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text-main);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+    }
+
+    .btn-ghost:hover {
+      border-color: rgba(129, 140, 248, 0.95);
+      background: rgba(17, 24, 39, 1);
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-rows: auto auto auto;
+      gap: 10px;
+    }
+
+    .lanes-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    @media (max-width: 1024px) {
+      .lanes-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .lane-card {
+      border-radius: var(--radius-lg);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(3, 7, 18, 0.98));
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      padding: 10px 10px 11px;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      min-height: 180px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .lane-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 24px 55px rgba(15, 23, 42, 0.95);
+    }
+
+    .lane-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lane-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lane-counter {
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .lane-add-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      background: rgba(15, 23, 42, 0.98);
+      color: var(--text-muted);
+      padding: 4px 8px;
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 0.13s ease;
+    }
+
+    .lane-add-btn:hover {
+      border-color: rgba(129, 140, 248, 0.95);
+      color: #e5e7eb;
+    }
+
+    .lane-body {
+      flex: 1;
+      border-radius: 14px;
+      border: 1px dashed rgba(148, 163, 184, 0.7);
+      padding: 6px 5px;
+      background: radial-gradient(circle at top, rgba(24, 24, 27, 0.9), rgba(15, 23, 42, 1));
+      overflow: auto;
+      transition: box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .lane-body.empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .lane-body.drop-highlight {
+      outline: 1px dashed rgba(129, 140, 248, 0.95);
+      outline-offset: 2px;
+      box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.7);
+      background: radial-gradient(circle at top, rgba(30, 64, 175, 0.55), rgba(15, 23, 42, 1));
+    }
+
+    @keyframes fadeInRule {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .rule-card {
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: linear-gradient(135deg, rgba(24, 24, 27, 0.96), rgba(15, 23, 42, 0.98));
+      padding: 7px 8px;
+      margin-bottom: 5px;
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      cursor: grab;
+      position: relative;
+      overflow: hidden;
+      animation: fadeInRule 0.22s ease-out;
+    }
+
+    .rule-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(129, 140, 248, 0.25), transparent 30%, transparent 70%, rgba(236, 72, 153, 0.25));
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease;
+    }
+
+    .rule-card:hover::before {
+      opacity: 1;
+    }
+
+    .rule-card.dragging {
+      opacity: 0.4;
+      transform: scale(0.98);
+      border-style: dashed;
+    }
+
+    .rule-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rule-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rule-handle {
+      width: 14px;
+      height: 26px;
+      border-radius: 10px;
+      border: 1px dashed rgba(148, 163, 184, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: rgba(148, 163, 184, 0.85);
+      backdrop-filter: blur(4px);
+    }
+
+    .rule-title {
+      font-size: 11px;
+      font-weight: 500;
+      color: #f9fafb;
+    }
+
+    .rule-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      font-size: 10px;
+      margin-top: 2px;
+    }
+
+    .rule-badge {
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      color: var(--text-muted);
+    }
+
+    .rule-badge.proto {
+      border-color: rgba(56, 189, 248, 0.9);
+      color: #bae6fd;
+      background: rgba(56, 189, 248, 0.18);
+    }
+
+    .rule-badge.action-ACCEPT {
+      border-color: rgba(34, 197, 94, 0.95);
+      color: #bbf7d0;
+      background: rgba(22, 163, 74, 0.25);
+    }
+
+    .rule-badge.action-DROP,
+    .rule-badge.action-REJECT {
+      border-color: rgba(248, 113, 113, 0.95);
+      color: #fecaca;
+      background: rgba(248, 113, 113, 0.25);
+    }
+
+    .rule-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .rule-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .btn-icon {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-muted);
+      font-size: 10px;
+      padding: 2px 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.13s ease;
+    }
+
+    .btn-icon:hover {
+      border-color: rgba(129, 140, 248, 0.95);
+      color: #e5e7eb;
+    }
+
+    .btn-icon-danger {
+      border-color: rgba(248, 113, 113, 0.95);
+      color: #fecaca;
+    }
+
+    .bottom-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 1024px) {
+      .bottom-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      border-radius: var(--radius-lg);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(3, 7, 18, 0.98));
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      padding: 10px 12px;
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 22px 50px rgba(15, 23, 42, 0.95);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 6px;
+    }
+
+    .card-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: var(--text-muted);
+    }
+
+    .card-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 6px;
+    }
+
+    @media (max-width: 640px) {
+      .chart-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .chart-card {
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      background: radial-gradient(circle at top, rgba(24, 24, 27, 0.95), rgba(15, 23, 42, 1));
+      padding: 8px 8px 9px;
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .chart-title {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .chart-body {
+      margin-top: 4px;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .bar-label {
+      width: 44px;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.95);
+      overflow: hidden;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+    }
+
+    .bar-fill.accept {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.95));
+    }
+
+    .bar-fill.drop {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(248, 113, 113, 0.2), rgba(248, 113, 113, 0.95));
+    }
+
+    .bar-value {
+      width: 26px;
+      text-align: right;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .stacked-bar {
+      position: relative;
+      width: 100%;
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      overflow: hidden;
+      margin-top: 5px;
+    }
+
+    .stacked-segment {
+      height: 100%;
+      float: left;
+    }
+
+    .stacked-segment.INPUT {
+      background: linear-gradient(90deg, rgba(168, 85, 247, 0.3), rgba(168, 85, 247, 0.95));
+    }
+
+    .stacked-segment.OUTPUT {
+      background: linear-gradient(90deg, rgba(56, 189, 248, 0.3), rgba(56, 189, 248, 0.95));
+    }
+
+    .stacked-segment.FORWARD {
+      background: linear-gradient(90deg, rgba(236, 72, 153, 0.3), rgba(236, 72, 153, 0.95));
+    }
+
+    .stacked-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .stacked-legend span.dot.INPUT {
+      background: rgba(168, 85, 247, 0.9);
+    }
+
+    .stacked-legend span.dot.OUTPUT {
+      background: rgba(56, 189, 248, 0.9);
+    }
+
+    .stacked-legend span.dot.FORWARD {
+      background: rgba(236, 72, 153, 0.9);
+    }
+
+    .stacked-legend span.dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .terminal {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: radial-gradient(circle at top, #020617, #020617 70%);
+      padding: 9px 10px;
+      font-size: 11px;
+      color: #e5e7eb;
+      min-height: 120px;
+      max-height: 210px;
+      overflow: auto;
+    }
+
+    .terminal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .terminal-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #4b5563;
+    }
+
+    .terminal-title {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+    }
+
+    .terminal-body {
+      white-space: pre;
+      line-height: 1.6;
+    }
+
+    .terminal-tagline {
+      margin-top: 4px;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    /* Import card */
+
+    .import-textarea {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.98);
+      color: var(--text-main);
+      padding: 8px 9px;
+      font-size: 11px;
+      min-height: 120px;
+      resize: vertical;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      outline: none;
+    }
+
+    .import-textarea:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.8);
+    }
+
+    .import-hint {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .import-code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 10px;
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 999px;
+      padding: 4px 8px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      display: inline-block;
+      margin-top: 4px;
+    }
+
+    /* FAB */
+
+    .fab {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      border: 1px solid rgba(168, 85, 247, 0.9);
+      background: radial-gradient(circle at 20% 0%, #a855f7, #38bdf8);
+      box-shadow: 0 20px 40px rgba(56, 189, 248, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #020617;
+      font-size: 26px;
+      cursor: pointer;
+      z-index: 40;
+      transition: all 0.15s ease;
+    }
+
+    .fab:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 24px 50px rgba(56, 189, 248, 0.9);
+    }
+
+    /* Modal */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(12px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 520px;
+      border-radius: 22px;
+      background: radial-gradient(circle at top, rgba(129, 140, 248, 0.25), transparent 60%),
+                  linear-gradient(145deg, #020617, #020617);
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      box-shadow: 0 30px 80px rgba(15, 23, 42, 0.95);
+      padding: 14px 16px 14px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .modal-title {
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .modal-title span.sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .modal-close {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      background: rgba(15, 23, 42, 0.98);
+      color: var(--text-muted);
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.13s ease;
+    }
+
+    .modal-close:hover {
+      border-color: rgba(248, 113, 113, 0.95);
+      color: #fecaca;
+    }
+
+    .modal-body {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    @media (max-width: 480px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .form-label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .input,
+    .select {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.75);
+      background: rgba(15, 23, 42, 0.98);
+      color: var(--text-main);
+      padding: 7px 9px;
+      font-size: 12px;
+      outline: none;
+      transition: all 0.13s ease;
+    }
+
+    .input::placeholder {
+      color: rgba(148, 163, 184, 0.7);
+    }
+
+    .input:focus,
+    .select:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.8);
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .hint {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <div class="brand">
+        <div class="brand-main">
+          <div class="brand-logo">IP</div>
+          <div class="brand-text">
+            <div class="brand-title">GigaShield</div>
+            <div class="brand-subtitle">Visual Firewall Dashboard</div>
+          </div>
+        </div>
+        <div class="pill">
+          <span class="pill-dot"></span>
+          Live · Preview
+        </div>
+      </div>
+
+      <div>
+        <div class="sidebar-section-title">Tabela ativa</div>
+        <div class="chip-row" id="table-chips">
+          <button class="chip active" data-table="filter">
+            <span class="dot"></span> filter
+          </button>
+          <button class="chip" data-table="nat">
+            <span class="dot"></span> nat
+          </button>
+          <button class="chip" data-table="mangle">
+            <span class="dot"></span> mangle
+          </button>
+          <button class="chip" data-table="raw">
+            <span class="dot"></span> raw
+          </button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div>
+        <div class="sidebar-section-title">Resumo rápido</div>
+        <div class="summary-grid">
+          <div class="summary-pill">
+            <span>Total regras</span>
+            <span class="value" id="summary-total-rules">0</span>
+          </div>
+          <div class="summary-pill">
+            <span>Chains ativas</span>
+            <span class="value" id="summary-active-chains">0</span>
+          </div>
+          <div class="summary-pill">
+            <span>ACCEPT</span>
+            <span class="value" id="summary-accept">0</span>
+          </div>
+          <div class="summary-pill">
+            <span>DROP/REJECT</span>
+            <span class="value" id="summary-drop">0</span>
+          </div>
+        </div>
+        <div class="legend-row" style="margin-top:6px;">
+          <div class="legend-item">
+            <span class="legend-dot accept"></span>
+            <span>Permitir</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot drop"></span>
+            <span>Bloquear</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot other"></span>
+            <span>Outros</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div>
+        <div class="sidebar-section-title">Última simulação</div>
+        <div class="small-card">
+          <div class="small-card-header">
+            <span>Preview iptables</span>
+            <span class="badge">Read-only</span>
+          </div>
+          <div class="small-highlight" id="summary-last-export">–</div>
+          <div class="small-meta" style="margin-top:4px;">
+            <span>Tabela</span>
+            <span id="summary-table">filter</span>
+          </div>
+          <div class="small-meta">
+            <span>Chain principal</span>
+            <span id="summary-main-chain">INPUT</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        Interface · Créditos:<br>
+        <a href="mailto:osvaldo@perito.digital">osvaldo@perito.digital</a> - Osvaldo Janeri Filho<br>
+        Site: <a href="https://perito.digital" target="_blank">perito.digital</a><br>
+        LinkedIn: <a href="https://linkedin.com/in/ojaneri" target="_blank">linkedin.com/in/ojaneri</a><br>
+        Project: <a href="https://github.com/ojaneri/gigashield" target="_blank">github.com/ojaneri/gigashield</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <div class="toolbar-title">
+          Firewall visual para iptables
+          <span class="toolbar-chip">Dark · Drag & Drop</span>
+        </div>
+        <div class="toolbar-meta" id="toolbar-meta">
+          Tabela: filter · Arraste regras entre INPUT, OUTPUT e FORWARD para montar sua política.
+        </div>
+      </div>
+      <div class="toolbar-right">
+        <button class="btn btn-ghost" id="btn-export">
+          Gerar comandos iptables
+        </button>
+        <button class="btn btn-primary" id="btn-open-modal">
+          + Nova regra
+        </button>
+      </div>
+    </div>
+
+    <div class="main-grid">
+      <!-- LANES -->
+      <div class="lanes-row">
+        <div class="lane-card" data-chain="INPUT">
+          <div class="lane-header">
+            <div class="lane-title">
+              INPUT
+              <span style="font-size:10px;color:var(--text-muted);">tráfego entrando</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div class="lane-counter" id="counter-INPUT">0</div>
+              <button class="lane-add-btn" data-add-chain="INPUT">+ regra</button>
+            </div>
+          </div>
+          <div class="lane-body empty" data-lane="INPUT">
+            Arraste regras pra cá ou clique em “+ regra”.
+          </div>
+        </div>
+
+        <div class="lane-card" data-chain="OUTPUT">
+          <div class="lane-header">
+            <div class="lane-title">
+              OUTPUT
+              <span style="font-size:10px;color:var(--text-muted);">tráfego saindo</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div class="lane-counter" id="counter-OUTPUT">0</div>
+              <button class="lane-add-btn" data-add-chain="OUTPUT">+ regra</button>
+            </div>
+          </div>
+          <div class="lane-body empty" data-lane="OUTPUT">
+            Controle conexões que o servidor inicia.
+          </div>
+        </div>
+
+        <div class="lane-card" data-chain="FORWARD">
+          <div class="lane-header">
+            <div class="lane-title">
+              FORWARD
+              <span style="font-size:10px;color:var(--text-muted);">tráfego roteado</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div class="lane-counter" id="counter-FORWARD">0</div>
+              <button class="lane-add-btn" data-add-chain="FORWARD">+ regra</button>
+            </div>
+          </div>
+          <div class="lane-body empty" data-lane="FORWARD">
+            Use se o servidor estiver roteando tráfego.
+          </div>
+        </div>
+      </div>
+
+      <!-- CHARTS + TERMINAL -->
+      <div class="bottom-row">
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Visão de portas e cadeias</div>
+              <div class="card-subtitle">Portas abertas vs bloqueadas e distribuição entre INPUT/OUTPUT/FORWARD.</div>
+            </div>
+          </div>
+
+          <div class="chart-grid">
+            <div class="chart-card">
+              <div class="chart-title">
+                Portas permitidas
+                <span style="font-size:10px;color:var(--text-muted);">ACCEPT</span>
+              </div>
+              <div class="chart-body" id="chart-accept">
+                <div style="font-size:10px;color:var(--text-muted);opacity:.8;">
+                  Nenhuma porta ainda. Adicione regras ACCEPT.
+                </div>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-title">
+                Portas permitidas
+                <span style="font-size:10px;color:var(--text-muted);">ACCEPT</span>
+              </div>
+              <div class="chart-body" id="chart-accept">
+                <div style="font-size:10px;color:var(--text-muted);opacity:.8;">
+                  Nenhuma porta ainda. Adicione regras ACCEPT.
+                </div>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-title">
+                Portas bloqueadas
+                <span style="font-size:10px;color:var(--text-muted);">DROP / REJECT</span>
+              </div>
+              <div class="chart-body" id="chart-drop">
+                <div style="font-size:10px;color:var(--text-muted);opacity:.8;">
+                  Nenhuma porta ainda. Adicione regras DROP/REJECT.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card" style="margin-top:6px;">
+            <div class="chart-title">
+              Distribuição por cadeia
+              <span style="font-size:10px;color:var(--text-muted);">INPUT · OUTPUT · FORWARD</span>
+            </div>
+            <div class="stacked-bar" id="stacked-chains"></div>
+            <div class="stacked-legend">
+              <span><span class="dot INPUT"></span> INPUT</span>
+              <span><span class="dot OUTPUT"></span> OUTPUT</span>
+              <span><span class="dot FORWARD"></span> FORWARD</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Preview de comandos</div>
+              <div class="card-subtitle">Copie & cole ou integre em um script/daemon de firewall.</div>
+            </div>
+          </div>
+          <div class="terminal">
+            <div class="terminal-header">
+              <div class="terminal-dots">
+                <div class="terminal-dot"></div>
+                <div class="terminal-dot"></div>
+                <div class="terminal-dot"></div>
+              </div>
+              <div class="terminal-title">iptables · preview</div>
+            </div>
+            <div class="terminal-body" id="terminal-body">
+# Clique em "Gerar comandos iptables" para ver o preview.
+            </div>
+            <div class="terminal-tagline">
+              Este não aplica nada no sistema. A ideia é servir como camada visual acima do iptables real.
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- IMPORT SECTION -->
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Importar saída do iptables</div>
+            <div class="card-subtitle">
+              Cole a saída do comando no servidor e converta para a visualização acima.
+            </div>
+          </div>
+          <button class="btn btn-ghost" id="btn-parse-iptables">
+            Transformar em visual
+          </button>
+        </div>
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">
+          No servidor, execute por exemplo:
+        </div>
+        <div class="import-code">
+          sudo iptables -L -n -v --line-numbers
+        </div>
+        <div class="import-hint">
+          Copie toda a saída do terminal e cole abaixo. Este parser simples lê as chains INPUT/OUTPUT/FORWARD da tabela filter.
+        </div>
+        <textarea id="iptables-raw" class="import-textarea" placeholder="Cole aqui a saída do iptables -L -n -v --line-numbers..."></textarea>
+        <div class="import-hint">
+          Observação: O parser é heurístico e pensado. Para produção, você pode trocar por parsing do <code>iptables-save</code>
+          no backend (PHP/Python) e alimentar esta mesma UI.
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- FAB -->
+<button class="fab" id="fab-add">+</button>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">
+        Nova regra de firewall
+        <span class="sub">Preencha os campos e arraste depois para a cadeia desejada.</span>
+      </div>
+      <button class="modal-close" id="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="field-chain">Chain</label>
+          <select id="field-chain" class="select">
+            <option value="INPUT">INPUT – tráfego entrando</option>
+            <option value="OUTPUT">OUTPUT – tráfego saindo</option>
+            <option value="FORWARD">FORWARD – tráfego roteado</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="field-action">Ação</label>
+          <select id="field-action" class="select">
+            <option value="ACCEPT">Permitir (ACCEPT)</option>
+            <option value="DROP">Bloquear (DROP)</option>
+            <option value="REJECT">Rejeitar (REJECT)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="field-proto">Protocolo</label>
+          <select id="field-proto" class="select">
+            <option value="tcp">TCP</option>
+            <option value="udp">UDP</option>
+            <option value="icmp">ICMP</option>
+            <option value="all">ALL</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="field-port">Porta</label>
+          <input id="field-port" class="input" placeholder="ex: 22, 80, 443, 8080..." />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="field-src">Origem</label>
+          <input id="field-src" class="input" placeholder="ex: 0.0.0.0/0, 192.168.0.0/24" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="field-dst">Destino</label>
+          <input id="field-dst" class="input" placeholder="ex: este host, 10.0.0.5/32" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="field-note">Descrição (opcional)</label>
+        <input id="field-note" class="input" placeholder="ex: Liberar HTTP externo, Bloquear Telnet, etc." />
+      </div>
+
+      <div class="hint">
+        Dica: use ACCEPT para portas que realmente precisam ficar abertas e DROP/REJECT para o resto. Depois,
+        arraste as regras para ajustar a ordem de processamento.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="btn-cancel">Cancelar</button>
+      <button class="btn btn-primary" id="btn-save-rule">Salvar regra</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const state = {
+    table: "filter",
+    rules: [] // { id, chain, proto, port, src, dst, action, note }
+  };
+
+  const chips = document.querySelectorAll("#table-chips .chip");
+  const toolbarMeta = document.getElementById("toolbar-meta");
+  const summaryTotalRules = document.getElementById("summary-total-rules");
+  const summaryActiveChains = document.getElementById("summary-active-chains");
+  const summaryAccept = document.getElementById("summary-accept");
+  const summaryDrop = document.getElementById("summary-drop");
+  const summaryLastExport = document.getElementById("summary-last-export");
+  const summaryTable = document.getElementById("summary-table");
+  const summaryMainChain = document.getElementById("summary-main-chain");
+
+  const laneBodies = {
+    INPUT: document.querySelector('.lane-body[data-lane="INPUT"]'),
+    OUTPUT: document.querySelector('.lane-body[data-lane="OUTPUT"]'),
+    FORWARD: document.querySelector('.lane-body[data-lane="FORWARD"]')
+  };
+
+  const laneCounters = {
+    INPUT: document.getElementById("counter-INPUT"),
+    OUTPUT: document.getElementById("counter-OUTPUT"),
+    FORWARD: document.getElementById("counter-FORWARD")
+  };
+
+  const chartAccept = document.getElementById("chart-accept");
+  const chartDrop = document.getElementById("chart-drop");
+  const stackedChains = document.getElementById("stacked-chains");
+  const terminalBody = document.getElementById("terminal-body");
+
+  const btnExport = document.getElementById("btn-export");
+  const fabAdd = document.getElementById("fab-add");
+  const btnOpenModal = document.getElementById("btn-open-modal");
+
+  const modalBackdrop = document.getElementById("modal-backdrop");
+  const modalClose = document.getElementById("modal-close");
+  const btnCancel = document.getElementById("btn-cancel");
+  const btnSaveRule = document.getElementById("btn-save-rule");
+
+  const fieldChain = document.getElementById("field-chain");
+  const fieldAction = document.getElementById("field-action");
+  const fieldProto = document.getElementById("field-proto");
+  const fieldPort = document.getElementById("field-port");
+  const fieldSrc = document.getElementById("field-src");
+  const fieldDst = document.getElementById("field-dst");
+  const fieldNote = document.getElementById("field-note");
+
+  const textareaIptables = document.getElementById("iptables-raw");
+  const btnParseIptables = document.getElementById("btn-parse-iptables");
+
+  let draggingCard = null;
+
+  function openModal(chainPreset) {
+    if (chainPreset) {
+      fieldChain.value = chainPreset;
+    }
+    fieldAction.value = "ACCEPT";
+    fieldProto.value = "tcp";
+    fieldPort.value = "";
+    fieldSrc.value = "";
+    fieldDst.value = "";
+    fieldNote.value = "";
+    modalBackdrop.style.display = "flex";
+  }
+
+  function closeModal() {
+    modalBackdrop.style.display = "none";
+  }
+
+  function addRuleFromModal() {
+    const chain = fieldChain.value || "INPUT";
+    const action = fieldAction.value || "ACCEPT";
+    const proto = fieldProto.value || "tcp";
+    const port = fieldPort.value.trim();
+    const src = fieldSrc.value.trim() || "0.0.0.0/0";
+    const dst = fieldDst.value.trim() || "este host";
+    const note = fieldNote.value.trim();
+
+    const rule = {
+      id: "r_" + Date.now() + "_" + Math.random().toString(16).slice(2),
+      chain,
+      proto,
+      port,
+      src,
+      dst,
+      action,
+      note
+    };
+
+    state.rules.push(rule);
+    renderAll();
+    closeModal();
+  }
+
+  function renderAll() {
+    renderLanes();
+    updateSummary();
+    renderCharts();
+  }
+
+  function renderLanes() {
+    ["INPUT", "OUTPUT", "FORWARD"].forEach(chain => {
+      const lane = laneBodies[chain];
+      lane.innerHTML = "";
+      const rules = state.rules.filter(r => r.chain === chain);
+
+      if (rules.length === 0) {
+        lane.classList.add("empty");
+        lane.textContent =
+          chain === "INPUT"
+            ? "Arraste regras pra cá ou clique em \"+ regra\"."
+            : chain === "OUTPUT"
+            ? "Controle conexões que o servidor inicia."
+            : "Use se o servidor estiver roteando tráfego.";
+      } else {
+        lane.classList.remove("empty");
+        rules.forEach(rule => {
+          const card = document.createElement("div");
+          card.className = "rule-card";
+          card.draggable = true;
+          card.dataset.id = rule.id;
+
+          card.innerHTML = `
+            <div class="rule-main">
+              <div class="rule-left">
+                <div class="rule-handle">⋮⋮</div>
+                <div>
+                  <div class="rule-title">${rule.action} ${rule.proto.toUpperCase()}${rule.port ? " · porta " + rule.port : ""}</div>
+                  <div class="rule-badges">
+                    <span class="rule-badge proto">${rule.proto.toUpperCase()}</span>
+                    <span class="rule-badge action-${rule.action}">${rule.action}</span>
+                    ${rule.note ? `<span class="rule-badge">${rule.note}</span>` : ""}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="rule-meta">
+              <span>Origem: ${rule.src}</span>
+              <span>Destino: ${rule.dst}</span>
+            </div>
+            <div class="rule-actions">
+              <button class="btn-icon btn-icon-danger" data-action="remove">✕</button>
+            </div>
+          `;
+
+          card.addEventListener("dragstart", e => {
+            draggingCard = card;
+            card.classList.add("dragging");
+            e.dataTransfer.effectAllowed = "move";
+          });
+
+          card.addEventListener("dragend", () => {
+            if (draggingCard) draggingCard.classList.remove("dragging");
+            draggingCard = null;
+            Object.values(laneBodies).forEach(lb => lb.classList.remove("drop-highlight"));
+          });
+
+          card.addEventListener("click", e => {
+            const action = e.target.getAttribute("data-action");
+            if (action === "remove") {
+              state.rules = state.rules.filter(r => r.id !== rule.id);
+              renderAll();
+            }
+          });
+
+          lane.appendChild(card);
+        });
+      }
+      laneCounters[chain].textContent = String(rules.length);
+
+      lane.addEventListener("dragover", e => {
+        e.preventDefault();
+        lane.classList.add("drop-highlight");
+      });
+      lane.addEventListener("dragleave", e => {
+        if (e.target === lane) {
+          lane.classList.remove("drop-highlight");
+        }
+      });
+      lane.addEventListener("drop", e => {
+        e.preventDefault();
+        lane.classList.remove("drop-highlight");
+        if (!draggingCard) return;
+        const id = draggingCard.dataset.id;
+        const rule = state.rules.find(r => r.id === id);
+        if (!rule) return;
+        rule.chain = chain;
+
+        const cards = Array.from(lane.querySelectorAll(".rule-card"));
+        if (cards.length === 0) {
+          // apenas atualiza chain
+        } else {
+          const others = state.rules.filter(r => r.id !== id);
+          const idxToInsertAfter = others.reduce(
+            (acc, r, idx) => (r.chain === chain ? idx : acc),
+            -1
+          );
+          others.splice(idxToInsertAfter + 1, 0, rule);
+          state.rules = others;
+        }
+        renderAll();
+      });
+    });
+  }
+
+  function updateSummary() {
+    const total = state.rules.length;
+    const accept = state.rules.filter(r => r.action === "ACCEPT").length;
+    const drop = state.rules.filter(r => r.action === "DROP" || r.action === "REJECT").length;
+    const chainsActive = ["INPUT", "OUTPUT", "FORWARD"].filter(
+      c => state.rules.some(r => r.chain === c)
+    ).length;
+
+    summaryTotalRules.textContent = String(total);
+    summaryAccept.textContent = String(accept);
+    summaryDrop.textContent = String(drop);
+    summaryActiveChains.textContent = String(chainsActive);
+    summaryTable.textContent = state.table;
+    summaryMainChain.textContent = "INPUT";
+
+    toolbarMeta.textContent =
+      `Tabela: ${state.table} · ${total} regra(s) · ${accept} ACCEPT · ${drop} DROP/REJECT. ` +
+      `Arraste cards entre INPUT, OUTPUT e FORWARD.`;
+  }
+
+  function buildPortCounts(actionFilter) {
+    const map = {};
+    state.rules.forEach(r => {
+      if (!r.port) return;
+      if (actionFilter === "ACCEPT" && r.action !== "ACCEPT") return;
+      if (actionFilter === "DROP" && !(r.action === "DROP" || r.action === "REJECT")) return;
+      map[r.port] = (map[r.port] || 0) + 1;
+    });
+    const entries = Object.entries(map).sort((a, b) => b[1] - a[1]);
+    return entries.slice(0, 5);
+  }
+
+  function renderCharts() {
+    const acceptPorts = buildPortCounts("ACCEPT");
+    const dropPorts = buildPortCounts("DROP");
+
+    function renderPortChart(container, data, type) {
+      container.innerHTML = "";
+      if (data.length === 0) {
+        container.innerHTML =
+          '<div style="font-size:10px;color:var(--text-muted);opacity:.8;">Sem dados ainda.</div>';
+        return;
+      }
+      const max = Math.max(...data.map(d => d[1]));
+      data.forEach(([port, count]) => {
+        const row = document.createElement("div");
+        row.className = "bar-row";
+        const label = document.createElement("div");
+        label.className = "bar-label";
+        label.textContent = "porta " + port;
+        const track = document.createElement("div");
+        track.className = "bar-track";
+        const fill = document.createElement("div");
+        fill.className = "bar-fill " + (type === "accept" ? "accept" : "drop");
+        fill.style.width = (count / max) * 100 + "%";
+        track.appendChild(fill);
+        const value = document.createElement("div");
+        value.className = "bar-value";
+        value.textContent = count;
+        row.appendChild(label);
+        row.appendChild(track);
+        row.appendChild(value);
+        container.appendChild(row);
+      });
+    }
+
+    renderPortChart(chartAccept, acceptPorts, "accept");
+    renderPortChart(chartDrop, dropPorts, "drop");
+
+    const counts = {
+      INPUT: state.rules.filter(r => r.chain === "INPUT").length,
+      OUTPUT: state.rules.filter(r => r.chain === "OUTPUT").length,
+      FORWARD: state.rules.filter(r => r.chain === "FORWARD").length
+    };
+    const total = counts.INPUT + counts.OUTPUT + counts.FORWARD;
+    stackedChains.innerHTML = "";
+    if (total === 0) {
+      stackedChains.innerHTML =
+        '<div style="font-size:10px;color:var(--text-muted);text-align:center;padding-top:2px;">Nenhuma regra ainda.</div>';
+    } else {
+      ["INPUT", "OUTPUT", "FORWARD"].forEach(chain => {
+        if (!counts[chain]) return;
+        const seg = document.createElement("div");
+        seg.className = "stacked-segment " + chain;
+        seg.style.width = (counts[chain] / total) * 100 + "%";
+        stackedChains.appendChild(seg);
+      });
+    }
+  }
+
+  function exportCommands() {
+    if (state.rules.length === 0) {
+      terminalBody.textContent =
+        "# Nenhuma regra definida para a tabela " + state.table + ".";
+      summaryLastExport.textContent = new Date().toLocaleTimeString();
+      return;
+    }
+
+    const lines = [];
+    lines.push(`# Preview de comandos iptables para a tabela '${state.table}'`);
+    lines.push(`# Gerado em ${new Date().toISOString()}`);
+    lines.push("");
+    ["INPUT", "OUTPUT", "FORWARD"].forEach(chain => {
+      const hasChain = state.rules.some(r => r.chain === chain);
+      if (hasChain) {
+        lines.push(`iptables -t ${state.table} -F ${chain}`);
+      }
+    });
+    lines.push("");
+
+    state.rules.forEach(rule => {
+      const parts = [`iptables -t ${state.table} -A ${rule.chain}`];
+      if (rule.proto && rule.proto !== "all") parts.push("-p " + rule.proto);
+      if (rule.src) parts.push("-s " + (rule.src === "este host" ? "0.0.0.0/0" : rule.src));
+      if (rule.dst && rule.dst !== "este host") parts.push("-d " + rule.dst);
+      if (rule.port && rule.proto !== "icmp" && rule.proto !== "all") {
+        parts.push("--dport " + rule.port);
+      }
+      parts.push("-j " + rule.action);
+      lines.push(parts.join(" "));
+    });
+
+    terminalBody.textContent = lines.join("\n");
+    summaryLastExport.textContent = new Date().toLocaleTimeString();
+  }
+
+  // Parser simples para saída do "iptables -L -n -v --line-numbers"
+  function parseIptablesText(text) {
+    const lines = text.split(/\r?\n/);
+    const parsed = [];
+    let currentChain = null;
+
+    for (const raw of lines) {
+      const line = raw.trim();
+      if (!line) continue;
+
+      const chainMatch = raw.match(/^Chain\s+(\S+)/);
+      if (chainMatch) {
+        currentChain = chainMatch[1].toUpperCase();
+        continue;
+      }
+
+      if (!currentChain) continue;
+      if (!["INPUT", "OUTPUT", "FORWARD"].includes(currentChain)) continue;
+
+      if (/^\s*\d+/.test(raw)) {
+        const parts = raw.trim().split(/\s+/);
+        if (parts.length < 9) continue;
+
+        // num pkts bytes target prot opt in out source destination [extras...]
+        const target = parts[3] || "ACCEPT";
+        const prot = parts[4] || "all";
+        const src = parts[8] || "0.0.0.0/0";
+        const dst = parts[9] || "0.0.0.0/0";
+
+        let port = "";
+        const portMatch = raw.match(/dpt:(\d+)/) || raw.match(/spt:(\d+)/);
+        if (portMatch) {
+          port = portMatch[1];
+        }
+
+        parsed.push({
+          id: "imp_" + currentChain + "_" + parts[0] + "_" + Math.random().toString(16).slice(2),
+          chain: currentChain,
+          proto: prot.toLowerCase(),
+          port,
+          src,
+          dst,
+          action: target.toUpperCase(),
+          note: "importado do iptables"
+        });
+      }
+    }
+
+    return parsed;
+  }
+
+  function importFromIptables() {
+    const raw = textareaIptables.value.trim();
+    if (!raw) {
+      terminalBody.textContent = "# Nada para importar. Cole a saída do iptables.";
+      return;
+    }
+
+    const parsed = parseIptablesText(raw);
+    if (!parsed.length) {
+      terminalBody.textContent =
+        "# Não foi possível interpretar a saída do iptables.\n" +
+        "# Verifique se usou: sudo iptables -L -n -v --line-numbers\n";
+      return;
+    }
+
+    state.table = "filter";
+    state.rules = parsed;
+    renderAll();
+    terminalBody.textContent =
+      "# Importadas " + parsed.length + " regras das chains INPUT/OUTPUT/FORWARD.\n" +
+      "# Agora você pode arrastar, editar e gerar o preview de comandos.";
+  }
+
+  chips.forEach(chip => {
+    chip.addEventListener("click", () => {
+      chips.forEach(c => c.classList.remove("active"));
+      chip.classList.add("active");
+      state.table = chip.dataset.table;
+      summaryTable.textContent = state.table;
+      renderCharts();
+      updateSummary();
+    });
+  });
+
+  btnExport.addEventListener("click", e => {
+    e.preventDefault();
+    exportCommands();
+  });
+
+  fabAdd.addEventListener("click", () => openModal());
+  btnOpenModal.addEventListener("click", () => openModal());
+
+  modalClose.addEventListener("click", closeModal);
+  btnCancel.addEventListener("click", closeModal);
+  modalBackdrop.addEventListener("click", e => {
+    if (e.target === modalBackdrop) closeModal();
+  });
+
+  btnSaveRule.addEventListener("click", e => {
+    e.preventDefault();
+    addRuleFromModal();
+  });
+
+  document.querySelectorAll(".lane-add-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const chain = btn.getAttribute("data-add-chain");
+      openModal(chain);
+    });
+  });
+
+  btnParseIptables.addEventListener("click", e => {
+    e.preventDefault();
+    importFromIptables();
+  });
+
+  function seedSampleRules() {
+    state.rules = [
+      {
+        id: "sample1",
+        chain: "INPUT",
+        proto: "tcp",
+        port: "22",
+        src: "192.168.0.0/24",
+        dst: "este host",
+        action: "ACCEPT",
+        note: "SSH interno"
+      },
+      {
+        id: "sample2",
+        chain: "INPUT",
+        proto: "tcp",
+        port: "80",
+        src: "0.0.0.0/0",
+        dst: "este host",
+        action: "ACCEPT",
+        note: "HTTP público"
+      },
+      {
+        id: "sample3",
+        chain: "INPUT",
+        proto: "tcp",
+        port: "23",
+        src: "0.0.0.0/0",
+        dst: "este host",
+        action: "DROP",
+        note: "Bloquear Telnet"
+      },
+      {
+        id: "sample4",
+        chain: "OUTPUT",
+        proto: "tcp",
+        port: "443",
+        src: "este host",
+        dst: "0.0.0.0/0",
+        action: "ACCEPT",
+        note: "HTTPS saída"
+      }
+    ];
+  }
+
+  seedSampleRules();
+  renderAll();
+</script>
+</body>
+</html>
