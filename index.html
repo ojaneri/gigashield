@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>GigaShield – Visual</title>
+  <title data-lang="page-title">GigaShield – Visual</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
@@ -1106,6 +1106,9 @@
     }
 
   </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
 </head>
 <body>
 
@@ -1117,18 +1120,18 @@
         <div class="brand-main">
           <div class="brand-logo">IP</div>
           <div class="brand-text">
-            <div class="brand-title">GigaShield</div>
-            <div class="brand-subtitle">Visual Firewall Dashboard</div>
+            <div class="brand-title" data-lang="brand-title">GigaShield</div>
+            <div class="brand-subtitle" data-lang="brand-subtitle">Visual Firewall Dashboard</div>
           </div>
         </div>
         <div class="pill">
           <span class="pill-dot"></span>
-          Live · Preview
+          <span data-lang="pill-live">Live</span> · <span data-lang="pill-preview">Preview</span>
         </div>
       </div>
 
       <div>
-        <div class="sidebar-section-title">Tabela ativa</div>
+        <div class="sidebar-section-title" data-lang="active-table">Tabela ativa</div>
         <div class="chip-row" id="table-chips">
           <button class="chip active" data-table="filter">
             <span class="dot"></span> filter
@@ -1148,14 +1151,14 @@
       <div class="divider"></div>
 
       <div>
-        <div class="sidebar-section-title">Resumo rápido</div>
+        <div class="sidebar-section-title" data-lang="quick-summary">Resumo rápido</div>
         <div class="summary-grid">
           <div class="summary-pill">
-            <span>Total regras</span>
+            <span data-lang="total-rules">Total regras</span>
             <span class="value" id="summary-total-rules">0</span>
           </div>
           <div class="summary-pill">
-            <span>Chains ativas</span>
+            <span data-lang="active-chains">Chains ativas</span>
             <span class="value" id="summary-active-chains">0</span>
           </div>
           <div class="summary-pill">
@@ -1170,15 +1173,15 @@
         <div class="legend-row" style="margin-top:6px;">
           <div class="legend-item">
             <span class="legend-dot accept"></span>
-            <span>Permitir</span>
+            <span data-lang="allow">Permitir</span>
           </div>
           <div class="legend-item">
             <span class="legend-dot drop"></span>
-            <span>Bloquear</span>
+            <span data-lang="block">Bloquear</span>
           </div>
           <div class="legend-item">
             <span class="legend-dot other"></span>
-            <span>Outros</span>
+            <span data-lang="others">Outros</span>
           </div>
         </div>
       </div>
@@ -1186,30 +1189,30 @@
       <div class="divider"></div>
 
       <div>
-        <div class="sidebar-section-title">Última simulação</div>
+        <div class="sidebar-section-title" data-lang="last-simulation">Última simulação</div>
         <div class="small-card">
           <div class="small-card-header">
-            <span>Preview iptables</span>
+            <span data-lang="iptables-preview">Preview iptables</span>
             <span class="badge">Read-only</span>
           </div>
           <div class="small-highlight" id="summary-last-export">–</div>
           <div class="small-meta" style="margin-top:4px;">
-            <span>Tabela</span>
+            <span data-lang="table">Tabela</span>
             <span id="summary-table">filter</span>
           </div>
           <div class="small-meta">
-            <span>Chain principal</span>
+            <span data-lang="main-chain">Chain principal</span>
             <span id="summary-main-chain">INPUT</span>
           </div>
         </div>
       </div>
 
       <div class="sidebar-footer">
-        Interface · Créditos:<br>
+        <span data-lang="interface-credits">Interface · Créditos:</span><br>
         <a href="mailto:osvaldo@perito.digital">osvaldo@perito.digital</a> - Osvaldo Janeri Filho<br>
-        Site: <a href="https://perito.digital" target="_blank">perito.digital</a><br>
+        <span data-lang="site">Site:</span> <a href="https://perito.digital" target="_blank">perito.digital</a><br>
         LinkedIn: <a href="https://linkedin.com/in/ojaneri" target="_blank">linkedin.com/in/ojaneri</a><br>
-        Project: <a href="https://github.com/ojaneri/gigashield" target="_blank">github.com/ojaneri/gigashield</a>
+        <span data-lang="project">Project:</span> <a href="https://github.com/ojaneri/gigashield" target="_blank">github.com/ojaneri/gigashield</a>
       </div>
     </div>
   </aside>
@@ -1219,7 +1222,7 @@
     <!-- TOOLBAR -->
     <div class="toolbar">
       <div class="toolbar-left">
-        <div class="toolbar-title">
+        <div class="toolbar-title" data-lang="toolbar-title">
           Firewall visual para iptables
           <span class="toolbar-chip">Dark · Drag & Drop</span>
         </div>
@@ -1228,10 +1231,17 @@
         </div>
       </div>
       <div class="toolbar-right">
-        <button class="btn btn-ghost" id="btn-export">
+        <select id="lang-selector" class="select" style="margin-right:8px;">
+          <option value="pt">PT-BR</option>
+          <option value="en">EN</option>
+        </select>
+        <button class="btn btn-ghost" id="btn-export" data-lang="btn-export">
           Gerar comandos iptables
         </button>
-        <button class="btn btn-primary" id="btn-open-modal">
+        <button class="btn btn-ghost" id="btn-pdf" data-lang="btn-pdf">
+          Salvar Relatório Executivo em PDF
+        </button>
+        <button class="btn btn-primary" id="btn-open-modal" data-lang="btn-new-rule">
           + Nova regra
         </button>
       </div>
@@ -1244,15 +1254,15 @@
           <div class="lane-header">
             <div class="lane-title">
               INPUT
-              <span style="font-size:10px;color:var(--text-muted);">tráfego entrando</span>
+              <span style="font-size:10px;color:var(--text-muted);" data-lang="input-desc">tráfego entrando</span>
             </div>
             <div style="display:flex;align-items:center;gap:6px;">
               <div class="lane-counter" id="counter-INPUT">0</div>
-              <button class="lane-add-btn" data-add-chain="INPUT">+ regra</button>
+              <button class="lane-add-btn" data-add-chain="INPUT" data-lang="add-rule">+ regra</button>
             </div>
           </div>
-          <div class="lane-body empty" data-lane="INPUT">
-            Arraste regras pra cá ou clique em “+ regra”.
+          <div class="lane-body empty" data-lane="INPUT" data-lang="input-empty">
+            Arraste regras pra cá ou clique em "+ regra".
           </div>
         </div>
 
@@ -1260,14 +1270,14 @@
           <div class="lane-header">
             <div class="lane-title">
               OUTPUT
-              <span style="font-size:10px;color:var(--text-muted);">tráfego saindo</span>
+              <span style="font-size:10px;color:var(--text-muted);" data-lang="output-desc">tráfego saindo</span>
             </div>
             <div style="display:flex;align-items:center;gap:6px;">
               <div class="lane-counter" id="counter-OUTPUT">0</div>
-              <button class="lane-add-btn" data-add-chain="OUTPUT">+ regra</button>
+              <button class="lane-add-btn" data-add-chain="OUTPUT" data-lang="add-rule">+ regra</button>
             </div>
           </div>
-          <div class="lane-body empty" data-lane="OUTPUT">
+          <div class="lane-body empty" data-lane="OUTPUT" data-lang="output-empty">
             Controle conexões que o servidor inicia.
           </div>
         </div>
@@ -1276,14 +1286,14 @@
           <div class="lane-header">
             <div class="lane-title">
               FORWARD
-              <span style="font-size:10px;color:var(--text-muted);">tráfego roteado</span>
+              <span style="font-size:10px;color:var(--text-muted);" data-lang="forward-desc">tráfego roteado</span>
             </div>
             <div style="display:flex;align-items:center;gap:6px;">
               <div class="lane-counter" id="counter-FORWARD">0</div>
-              <button class="lane-add-btn" data-add-chain="FORWARD">+ regra</button>
+              <button class="lane-add-btn" data-add-chain="FORWARD" data-lang="add-rule">+ regra</button>
             </div>
           </div>
-          <div class="lane-body empty" data-lane="FORWARD">
+          <div class="lane-body empty" data-lane="FORWARD" data-lang="forward-empty">
             Use se o servidor estiver roteando tráfego.
           </div>
         </div>
@@ -1294,19 +1304,19 @@
         <section class="card">
           <div class="card-header">
             <div>
-              <div class="card-title">Visão de portas e cadeias</div>
-              <div class="card-subtitle">Portas abertas vs bloqueadas e distribuição entre INPUT/OUTPUT/FORWARD.</div>
+              <div class="card-title" data-lang="ports-chains-view">Visão de portas e cadeias</div>
+              <div class="card-subtitle" data-lang="ports-chains-subtitle">Portas abertas vs bloqueadas e distribuição entre INPUT/OUTPUT/FORWARD.</div>
             </div>
           </div>
 
           <div class="chart-grid">
             <div class="chart-card">
               <div class="chart-title">
-                Portas permitidas
+                <span data-lang="allowed-ports">Portas permitidas</span>
                 <span style="font-size:10px;color:var(--text-muted);">ACCEPT</span>
               </div>
               <div class="chart-body" id="chart-accept">
-                <div style="font-size:10px;color:var(--text-muted);opacity:.8;">
+                <div style="font-size:10px;color:var(--text-muted);opacity:.8;" data-lang="no-ports-accept">
                   Nenhuma porta ainda. Adicione regras ACCEPT.
                 </div>
               </div>
@@ -1314,11 +1324,11 @@
 
             <div class="chart-card">
               <div class="chart-title">
-                Portas permitidas
+                <span data-lang="allowed-ports">Portas permitidas</span>
                 <span style="font-size:10px;color:var(--text-muted);">ACCEPT</span>
               </div>
               <div class="chart-body" id="chart-accept">
-                <div style="font-size:10px;color:var(--text-muted);opacity:.8;">
+                <div style="font-size:10px;color:var(--text-muted);opacity:.8;" data-lang="no-ports-accept">
                   Nenhuma porta ainda. Adicione regras ACCEPT.
                 </div>
               </div>
@@ -1326,11 +1336,11 @@
 
             <div class="chart-card">
               <div class="chart-title">
-                Portas bloqueadas
+                <span data-lang="blocked-ports">Portas bloqueadas</span>
                 <span style="font-size:10px;color:var(--text-muted);">DROP / REJECT</span>
               </div>
               <div class="chart-body" id="chart-drop">
-                <div style="font-size:10px;color:var(--text-muted);opacity:.8;">
+                <div style="font-size:10px;color:var(--text-muted);opacity:.8;" data-lang="no-ports-drop">
                   Nenhuma porta ainda. Adicione regras DROP/REJECT.
                 </div>
               </div>
@@ -1339,7 +1349,7 @@
 
           <div class="chart-card" style="margin-top:6px;">
             <div class="chart-title">
-              Distribuição por cadeia
+              <span data-lang="distribution-by-chain">Distribuição por cadeia</span>
               <span style="font-size:10px;color:var(--text-muted);">INPUT · OUTPUT · FORWARD</span>
             </div>
             <div class="stacked-bar" id="stacked-chains"></div>
@@ -1354,8 +1364,8 @@
         <section class="card">
           <div class="card-header">
             <div>
-              <div class="card-title">Preview de comandos</div>
-              <div class="card-subtitle">Copie & cole ou integre em um script/daemon de firewall.</div>
+              <div class="card-title" data-lang="commands-preview">Preview de comandos</div>
+              <div class="card-subtitle" data-lang="commands-subtitle">Copie & cole ou integre em um script/daemon de firewall.</div>
             </div>
           </div>
           <div class="terminal">
@@ -1368,9 +1378,9 @@
               <div class="terminal-title">iptables · preview</div>
             </div>
             <div class="terminal-body" id="terminal-body">
-# Clique em "Gerar comandos iptables" para ver o preview.
+# Click "Generate iptables commands" to see the preview.
             </div>
-            <div class="terminal-tagline">
+            <div class="terminal-tagline" data-lang="terminal-tagline">
               Este não aplica nada no sistema. A ideia é servir como camada visual acima do iptables real.
             </div>
           </div>
@@ -1381,26 +1391,26 @@
       <section class="card">
         <div class="card-header">
           <div>
-            <div class="card-title">Importar saída do iptables</div>
-            <div class="card-subtitle">
+            <div class="card-title" data-lang="import-iptables-output">Importar saída do iptables</div>
+            <div class="card-subtitle" data-lang="import-subtitle">
               Cole a saída do comando no servidor e converta para a visualização acima.
             </div>
           </div>
-          <button class="btn btn-ghost" id="btn-parse-iptables">
+          <button class="btn btn-ghost" id="btn-parse-iptables" data-lang="transform-visual">
             Transformar em visual
           </button>
         </div>
-        <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;" data-lang="on-server-run">
           No servidor, execute por exemplo:
         </div>
         <div class="import-code">
           sudo iptables -L -n -v --line-numbers
         </div>
-        <div class="import-hint">
+        <div class="import-hint" data-lang="copy-output-hint">
           Copie toda a saída do terminal e cole abaixo. Este parser simples lê as chains INPUT/OUTPUT/FORWARD da tabela filter.
         </div>
-        <textarea id="iptables-raw" class="import-textarea" placeholder="Cole aqui a saída do iptables -L -n -v --line-numbers..."></textarea>
-        <div class="import-hint">
+        <textarea id="iptables-raw" class="import-textarea" placeholder="Cole aqui a saída do iptables -L -n -v --line-numbers..." data-lang="textarea-placeholder"></textarea>
+        <div class="import-hint" data-lang="parser-note">
           Observação: O parser é heurístico e pensado. Para produção, você pode trocar por parsing do <code>iptables-save</code>
           no backend (PHP/Python) e alimentar esta mesma UI.
         </div>
@@ -1417,8 +1427,8 @@
   <div class="modal">
     <div class="modal-header">
       <div class="modal-title">
-        Nova regra de firewall
-        <span class="sub">Preencha os campos e arraste depois para a cadeia desejada.</span>
+        <span data-lang="new-firewall-rule">Nova regra de firewall</span>
+        <span class="sub" data-lang="fill-fields-drag">Preencha os campos e arraste depois para a cadeia desejada.</span>
       </div>
       <button class="modal-close" id="modal-close">✕</button>
     </div>
@@ -1427,24 +1437,24 @@
         <div class="form-group">
           <label class="form-label" for="field-chain">Chain</label>
           <select id="field-chain" class="select">
-            <option value="INPUT">INPUT – tráfego entrando</option>
-            <option value="OUTPUT">OUTPUT – tráfego saindo</option>
-            <option value="FORWARD">FORWARD – tráfego roteado</option>
+            <option value="INPUT" data-lang="input-option">INPUT – tráfego entrando</option>
+            <option value="OUTPUT" data-lang="output-option">OUTPUT – tráfego saindo</option>
+            <option value="FORWARD" data-lang="forward-option">FORWARD – tráfego roteado</option>
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label" for="field-action">Ação</label>
+          <label class="form-label" for="field-action" data-lang="action-label">Ação</label>
           <select id="field-action" class="select">
-            <option value="ACCEPT">Permitir (ACCEPT)</option>
-            <option value="DROP">Bloquear (DROP)</option>
-            <option value="REJECT">Rejeitar (REJECT)</option>
+            <option value="ACCEPT" data-lang="allow-accept">Permitir (ACCEPT)</option>
+            <option value="DROP" data-lang="block-drop">Bloquear (DROP)</option>
+            <option value="REJECT" data-lang="reject-reject">Rejeitar (REJECT)</option>
           </select>
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label" for="field-proto">Protocolo</label>
+          <label class="form-label" for="field-proto" data-lang="protocol-label">Protocolo</label>
           <select id="field-proto" class="select">
             <option value="tcp">TCP</option>
             <option value="udp">UDP</option>
@@ -1453,40 +1463,217 @@
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label" for="field-port">Porta</label>
-          <input id="field-port" class="input" placeholder="ex: 22, 80, 443, 8080..." />
+          <label class="form-label" for="field-port" data-lang="port-label">Porta</label>
+          <input id="field-port" class="input" placeholder="ex: 22, 80, 443, 8080..." data-lang="port-placeholder" />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label" for="field-src">Origem</label>
-          <input id="field-src" class="input" placeholder="ex: 0.0.0.0/0, 192.168.0.0/24" />
+          <label class="form-label" for="field-src" data-lang="source-label">Origem</label>
+          <input id="field-src" class="input" placeholder="ex: 0.0.0.0/0, 192.168.0.0/24" data-lang="source-placeholder" />
         </div>
         <div class="form-group">
-          <label class="form-label" for="field-dst">Destino</label>
-          <input id="field-dst" class="input" placeholder="ex: este host, 10.0.0.5/32" />
+          <label class="form-label" for="field-dst" data-lang="destination-label">Destino</label>
+          <input id="field-dst" class="input" placeholder="ex: este host, 10.0.0.5/32" data-lang="destination-placeholder" />
         </div>
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="field-note">Descrição (opcional)</label>
-        <input id="field-note" class="input" placeholder="ex: Liberar HTTP externo, Bloquear Telnet, etc." />
+        <label class="form-label" for="field-note" data-lang="description-label">Descrição (opcional)</label>
+        <input id="field-note" class="input" placeholder="ex: Liberar HTTP externo, Bloquear Telnet, etc." data-lang="description-placeholder" />
       </div>
 
-      <div class="hint">
+      <div class="hint" data-lang="modal-hint">
         Dica: use ACCEPT para portas que realmente precisam ficar abertas e DROP/REJECT para o resto. Depois,
         arraste as regras para ajustar a ordem de processamento.
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-ghost" id="btn-cancel">Cancelar</button>
-      <button class="btn btn-primary" id="btn-save-rule">Salvar regra</button>
+      <button class="btn btn-ghost" id="btn-cancel" data-lang="cancel">Cancelar</button>
+      <button class="btn btn-primary" id="btn-save-rule" data-lang="save-rule">Salvar regra</button>
     </div>
   </div>
 </div>
 
 <script>
+  const translations = {
+    pt: {
+      'brand-title': 'GigaShield',
+      'brand-subtitle': 'Visual Firewall Dashboard',
+      'pill-live': 'Live',
+      'pill-preview': 'Preview',
+      'active-table': 'Tabela ativa',
+      'quick-summary': 'Resumo rápido',
+      'total-rules': 'Total regras',
+      'active-chains': 'Chains ativas',
+      'allow': 'Permitir',
+      'block': 'Bloquear',
+      'others': 'Outros',
+      'last-simulation': 'Última simulação',
+      'iptables-preview': 'Preview iptables',
+      'table': 'Tabela',
+      'main-chain': 'Chain principal',
+      'interface-credits': 'Interface · Créditos:',
+      'site': 'Site:',
+      'project': 'Project:',
+      'toolbar-title': 'Firewall visual para iptables',
+      'btn-export': 'Gerar comandos iptables',
+      'btn-pdf': 'Salvar Relatório Executivo em PDF',
+      'btn-new-rule': '+ Nova regra',
+      'input-desc': 'tráfego entrando',
+      'output-desc': 'tráfego saindo',
+      'forward-desc': 'tráfego roteado',
+      'add-rule': '+ regra',
+      'input-empty': 'Arraste regras pra cá ou clique em "+ regra".',
+      'output-empty': 'Controle conexões que o servidor inicia.',
+      'forward-empty': 'Use se o servidor estiver roteando tráfego.',
+      'ports-chains-view': 'Visão de portas e cadeias',
+      'ports-chains-subtitle': 'Portas abertas vs bloqueadas e distribuição entre INPUT/OUTPUT/FORWARD.',
+      'allowed-ports': 'Portas permitidas',
+      'no-ports-accept': 'Nenhuma porta ainda. Adicione regras ACCEPT.',
+      'blocked-ports': 'Portas bloqueadas',
+      'no-ports-drop': 'Nenhuma porta ainda. Adicione regras DROP/REJECT.',
+      'distribution-by-chain': 'Distribuição por cadeia',
+      'commands-preview': 'Preview de comandos',
+      'commands-subtitle': 'Copie & cole ou integre em um script/daemon de firewall.',
+      'terminal-tagline': 'Este não aplica nada no sistema. A ideia é servir como camada visual acima do iptables real.',
+      'import-iptables-output': 'Importar saída do iptables',
+      'import-subtitle': 'Cole a saída do comando no servidor e converta para a visualização acima.',
+      'transform-visual': 'Transformar em visual',
+      'on-server-run': 'No servidor, execute por exemplo:',
+      'copy-output-hint': 'Copie toda a saída do terminal e cole abaixo. Este parser simples lê as chains INPUT/OUTPUT/FORWARD da tabela filter.',
+      'textarea-placeholder': 'Cole aqui a saída do iptables -L -n -v --line-numbers...',
+      'parser-note': 'Observação: O parser é heurístico e pensado. Para produção, você pode trocar por parsing do <code>iptables-save</code> no backend (PHP/Python) e alimentar esta mesma UI.',
+      'new-firewall-rule': 'Nova regra de firewall',
+      'fill-fields-drag': 'Preencha os campos e arraste depois para a cadeia desejada.',
+      'input-option': 'INPUT – tráfego entrando',
+      'output-option': 'OUTPUT – tráfego saindo',
+      'forward-option': 'FORWARD – tráfego roteado',
+      'action-label': 'Ação',
+      'allow-accept': 'Permitir (ACCEPT)',
+      'block-drop': 'Bloquear (DROP)',
+      'reject-reject': 'Rejeitar (REJECT)',
+      'protocol-label': 'Protocolo',
+      'port-label': 'Porta',
+      'port-placeholder': 'ex: 22, 80, 443, 8080...',
+      'source-label': 'Origem',
+      'source-placeholder': 'ex: 0.0.0.0/0, 192.168.0.0/24',
+      'destination-label': 'Destino',
+      'destination-placeholder': 'ex: este host, 10.0.0.5/32',
+      'description-label': 'Descrição (opcional)',
+      'description-placeholder': 'ex: Liberar HTTP externo, Bloquear Telnet, etc.',
+      'modal-hint': 'Dica: use ACCEPT para portas que realmente precisam ficar abertas e DROP/REJECT para o resto. Depois, arraste as regras para ajustar a ordem de processamento.',
+      'cancel': 'Cancelar',
+      'save-rule': 'Salvar regra',
+      'page-title': 'GigaShield – Visual',
+      'no-data': 'Sem dados ainda.',
+      'click-generate': '# Clique em "Gerar comandos iptables" para ver o preview.',
+      'no-rules': '# Nenhuma regra definida para a tabela ',
+      'imported-rules': '# Importadas ',
+      'rules-from-chains': ' regras das chains INPUT/OUTPUT/FORWARD.',
+      'nothing-to-import': '# Nada para importar. Cole a saída do iptables.',
+      'cannot-interpret': '# Não foi possível interpretar a saída do iptables.',
+      'use-command': '# Verifique se usou: sudo iptables -L -n -v --line-numbers',
+      'rule-origin': 'Origem:',
+      'rule-destination': 'Destino:',
+      'port': 'porta ',
+      'imported': 'importado do iptables',
+      'internal-ssh': 'SSH interno',
+      'external-http': 'HTTP público',
+      'block-telnet': 'Bloquear Telnet',
+      'outgoing-https': 'HTTPS saída'
+    },
+    en: {
+      'brand-title': 'GigaShield',
+      'brand-subtitle': 'Visual Firewall Dashboard',
+      'pill-live': 'Live',
+      'pill-preview': 'Preview',
+      'active-table': 'Active table',
+      'quick-summary': 'Quick summary',
+      'total-rules': 'Total rules',
+      'active-chains': 'Active chains',
+      'allow': 'Allow',
+      'block': 'Block',
+      'others': 'Others',
+      'last-simulation': 'Last simulation',
+      'iptables-preview': 'Iptables preview',
+      'table': 'Table',
+      'main-chain': 'Main chain',
+      'interface-credits': 'Interface · Credits:',
+      'site': 'Site:',
+      'project': 'Project:',
+      'toolbar-title': 'Visual firewall for iptables',
+      'btn-export': 'Generate iptables commands',
+      'btn-pdf': 'Save Executive Report in PDF',
+      'btn-new-rule': '+ New rule',
+      'input-desc': 'incoming traffic',
+      'output-desc': 'outgoing traffic',
+      'forward-desc': 'routed traffic',
+      'add-rule': '+ rule',
+      'input-empty': 'Drag rules here or click "+ rule".',
+      'output-empty': 'Control connections initiated by the server.',
+      'forward-empty': 'Use if the server is routing traffic.',
+      'ports-chains-view': 'Ports and chains view',
+      'ports-chains-subtitle': 'Open ports vs blocked and distribution between INPUT/OUTPUT/FORWARD.',
+      'allowed-ports': 'Allowed ports',
+      'no-ports-accept': 'No ports yet. Add ACCEPT rules.',
+      'blocked-ports': 'Blocked ports',
+      'no-ports-drop': 'No ports yet. Add DROP/REJECT rules.',
+      'distribution-by-chain': 'Distribution by chain',
+      'commands-preview': 'Commands preview',
+      'commands-subtitle': 'Copy & paste or integrate into a firewall script/daemon.',
+      'terminal-tagline': 'This does not apply anything to the system. The idea is to serve as a visual layer above real iptables.',
+      'import-iptables-output': 'Import iptables output',
+      'import-subtitle': 'Paste the command output on the server and convert to the visualization above.',
+      'transform-visual': 'Transform into visual',
+      'on-server-run': 'On the server, run for example:',
+      'copy-output-hint': 'Copy the entire terminal output and paste below. This simple parser reads the INPUT/OUTPUT/FORWARD chains from the filter table.',
+      'textarea-placeholder': 'Paste here the output of iptables -L -n -v --line-numbers...',
+      'parser-note': 'Note: The parser is heuristic and thought out. For production, you can replace with parsing of <code>iptables-save</code> in the backend (PHP/Python) and feed this same UI.',
+      'new-firewall-rule': 'New firewall rule',
+      'fill-fields-drag': 'Fill in the fields and then drag to the desired chain.',
+      'input-option': 'INPUT – incoming traffic',
+      'output-option': 'OUTPUT – outgoing traffic',
+      'forward-option': 'FORWARD – routed traffic',
+      'action-label': 'Action',
+      'allow-accept': 'Allow (ACCEPT)',
+      'block-drop': 'Block (DROP)',
+      'reject-reject': 'Reject (REJECT)',
+      'protocol-label': 'Protocol',
+      'port-label': 'Port',
+      'port-placeholder': 'e.g.: 22, 80, 443, 8080...',
+      'source-label': 'Source',
+      'source-placeholder': 'e.g.: 0.0.0.0/0, 192.168.0.0/24',
+      'destination-label': 'Destination',
+      'destination-placeholder': 'e.g.: this host, 10.0.0.5/32',
+      'description-label': 'Description (optional)',
+      'description-placeholder': 'e.g.: Allow external HTTP, Block Telnet, etc.',
+      'modal-hint': 'Tip: use ACCEPT for ports that really need to be open and DROP/REJECT for the rest. Then, drag the rules to adjust the processing order.',
+      'cancel': 'Cancel',
+      'save-rule': 'Save rule',
+      'page-title': 'GigaShield – Visual',
+      'no-data': 'No data yet.',
+      'click-generate': '# Click "Generate iptables commands" to see the preview.',
+      'no-rules': '# No rules defined for table ',
+      'imported-rules': '# Imported ',
+      'rules-from-chains': ' rules from INPUT/OUTPUT/FORWARD chains.',
+      'nothing-to-import': '# Nothing to import. Paste the iptables output.',
+      'cannot-interpret': '# Could not interpret the iptables output.',
+      'use-command': '# Check if you used: sudo iptables -L -n -v --line-numbers',
+      'rule-origin': 'Origin:',
+      'rule-destination': 'Destination:',
+      'port': 'port ',
+      'imported': 'imported from iptables',
+      'internal-ssh': 'Internal SSH',
+      'external-http': 'Public HTTP',
+      'block-telnet': 'Block Telnet',
+      'outgoing-https': 'Outgoing HTTPS'
+    }
+  };
+
+  let currentLang = 'pt';
+
   const state = {
     table: "filter",
     rules: [] // { id, chain, proto, port, src, dst, action, note }
@@ -1538,8 +1725,199 @@
 
   const textareaIptables = document.getElementById("iptables-raw");
   const btnParseIptables = document.getElementById("btn-parse-iptables");
+  const btnPdf = document.getElementById("btn-pdf");
+
+  const langSelector = document.getElementById('lang-selector');
+  langSelector.addEventListener('change', () => {
+    currentLang = langSelector.value;
+    updateTexts();
+    renderAll();
+  });
+
+  function updateTexts() {
+    document.querySelectorAll('[data-lang]').forEach(el => {
+      const key = el.getAttribute('data-lang');
+      if (translations[currentLang][key]) {
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+          el.placeholder = translations[currentLang][key];
+        } else if (el.tagName === 'TITLE') {
+          document.title = translations[currentLang][key];
+        } else {
+          el.textContent = translations[currentLang][key];
+        }
+      }
+    });
+    document.documentElement.lang = currentLang === 'pt' ? 'pt-BR' : 'en';
+  }
 
   let draggingCard = null;
+
+  function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const date = new Date().toLocaleDateString('pt-BR');
+
+    // Build HTML content
+    let htmlContent = `
+      <div style="font-family: Arial, sans-serif; padding: 20px; background: white; color: black;">
+        <h1 style="color: #1e40af; text-align: center;">Executive Cover</h1>
+        <h2 style="text-align: center; color: black;">Executive Firewall Report</h2>
+        <p style="text-align: center; color: black;">Generation Date: ${date}</p>
+        <p style="text-align: center; color: black;">Generated by GigaShield - Visual Tool for Firewall Configuration</p>
+        <hr style="border-color: #ccc;">
+
+        <h2 style="color: black;">Executive Summary</h2>
+        <p style="color: black;">This report presents an executive analysis of the firewall configuration based on the defined rules. It includes overview, chain architecture, rule explanations with business impact, ports and services analysis, risk assessment, and recommendations for ISO 27001 compliance and security best practices.</p>
+        <p style="color: black;"><strong>Total Rules:</strong> ${state.rules.length}</p>
+        <p style="color: black;"><strong>Acceptance Rules (ACCEPT):</strong> ${state.rules.filter(r => r.action === 'ACCEPT').length}</p>
+        <p style="color: black;"><strong>Blocking Rules (DROP/REJECT):</strong> ${state.rules.filter(r => r.action === 'DROP' || r.action === 'REJECT').length}</p>
+        <p style="color: black;"><strong>Active Chains:</strong> ${['INPUT', 'OUTPUT', 'FORWARD'].filter(c => state.rules.some(r => r.chain === c)).length}</p>
+        <p style="color: black;"><strong>Table:</strong> ${state.table}</p>
+        <hr style="border-color: #ccc;">
+
+        <h2 style="color: black;">Overview</h2>
+        <p style="color: black;">The firewall configuration aims to protect a generic server hosting business applications, controlling inbound and outbound traffic. The defined rules ensure secure access to essential services while blocking potential threats. This configuration supports continuous operations, minimizing disruptions and aligning with information security principles.</p>
+        <hr style="border-color: #ccc;">
+
+        <h2 style="color: black;">Chain Architecture</h2>
+        <p style="color: black;">Iptables chains organize packet processing:</p>
+        <ul style="color: black;">
+          <li><strong>INPUT:</strong> Controls traffic destined to the server itself. Rules here protect against unauthorized access.</li>
+          <li><strong>OUTPUT:</strong> Manages traffic originated from the server. Essential for secure outbound connections.</li>
+          <li><strong>FORWARD:</strong> Used for routing traffic through the server, common in gateway configurations.</li>
+        </ul>
+        <p style="color: black;">Current distribution: INPUT (${state.rules.filter(r => r.chain === 'INPUT').length}), OUTPUT (${state.rules.filter(r => r.chain === 'OUTPUT').length}), FORWARD (${state.rules.filter(r => r.chain === 'FORWARD').length}).</p>
+        <hr style="border-color: #ccc;">
+
+        <h2 style="color: black;">Explained Rules</h2>
+        <p style="color: black;">Each rule is explained with its technical and business impact, connecting to ISO 27001 compliance (A.9 - Access Control).</p>
+    `;
+
+    state.rules.forEach(rule => {
+      const actionText = rule.action === 'ACCEPT' ? 'Allow' : 'Block';
+      const chainText = rule.chain === 'INPUT' ? 'incoming traffic' : rule.chain === 'OUTPUT' ? 'outgoing traffic' : 'routed traffic';
+      const protoText = rule.proto.toUpperCase();
+      const portText = rule.port ? ` on port ${rule.port}` : '';
+      const srcText = rule.src === '0.0.0.0/0' ? 'from any origin' : `from origin ${rule.src}`;
+      const dstText = rule.dst === 'este host' ? 'to this server' : `to ${rule.dst}`;
+      const noteText = rule.note ? ` (${rule.note})` : '';
+
+      let businessImpact = '';
+      if (rule.port === '22' && rule.action === 'ACCEPT') {
+        businessImpact = 'Impact: Allows secure remote administration, essential for maintenance. Aligns with ISO 27001 A.9.2.2 - Remote access control.';
+      } else if (rule.port === '80' && rule.action === 'ACCEPT') {
+        businessImpact = 'Impact: Enables public web access, critical for online service availability. HTTPS redirection is recommended.';
+      } else if (rule.port === '443' && rule.action === 'ACCEPT') {
+        businessImpact = 'Impact: Ensures secure web communication, protecting customer data. Essential for compliance with data protection laws.';
+      } else if (rule.action === 'DROP') {
+        businessImpact = 'Impact: Blocks unauthorized access, reducing intrusion risks. Supports defense in depth principle.';
+      } else {
+        businessImpact = 'Impact: Regulates traffic flow, balancing security and operational functionality.';
+      }
+
+      htmlContent += `
+        <p style="color: black;">&nbsp;</p>
+        <p style="color: black;"><strong>${actionText} ${chainText} ${protoText}${portText} ${srcText} ${dstText}.${noteText}</strong></p>
+        <p style="color: black;">${businessImpact}</p>
+      `;
+    });
+
+    htmlContent += `
+        <hr style="border-color: #ccc;">
+
+        <h2 style="color: black;">Ports and Services</h2>
+        <p style="color: black;">Analysis of configured ports and their associated services:</p>
+        <ul style="color: black;">
+    `;
+
+    const portMappings = {
+      '22': 'SSH (Secure Shell) - Secure remote access. Essential for administration, but should be restricted to trusted IPs.',
+      '23': 'Telnet - Insecure remote access. Usually blocked due to vulnerabilities.',
+      '80': 'HTTP - Unencrypted web traffic. Used for websites, but HTTPS redirection is recommended.',
+      '443': 'HTTPS - Encrypted web traffic. Standard for secure online communications.',
+      '53': 'DNS - Name resolution. Critical for web browsing and domain resolution.',
+      '25': 'SMTP - Email sending. Necessary for outbound email servers.',
+      '110': 'POP3 - Basic email receiving. Used for basic email clients.',
+      '143': 'IMAP - Advanced email receiving. Supports email synchronization.',
+      '21': 'FTP - File transfer. Not secure; consider SFTP.',
+      '3306': 'MySQL - Database. Should be accessible only internally.',
+      '5432': 'PostgreSQL - Database. Similar to MySQL, restricted access.'
+    };
+
+    const usedPorts = [...new Set(state.rules.map(r => r.port).filter(p => p))];
+    usedPorts.forEach(port => {
+      if (portMappings[port]) {
+        htmlContent += `<li style="color: black;"><strong>Porta ${port}:</strong> ${portMappings[port]}</li>`;
+      }
+    });
+
+    htmlContent += `
+        </ul>
+        <hr style="border-color: #ccc;">
+
+        <h2 style="color: black;">Risk Analysis</h2>
+        <p style="color: black;">Risk assessment based on current configuration:</p>
+        <ul style="color: black;">
+    `;
+
+    const risks = [];
+    if (state.rules.some(r => r.port === '22' && r.src === '0.0.0.0/0' && r.action === 'ACCEPT')) {
+      risks.push('High Risk: SSH open to any origin. May allow brute force attacks. Key authentication and IP restriction recommended.');
+    }
+    if (!state.rules.some(r => r.port === '443' && r.action === 'ACCEPT')) {
+      risks.push('Medium Risk: Lack of HTTPS may expose data in transit. Affects GDPR/ISO 27001 compliance.');
+    }
+    if (state.rules.some(r => r.port === '23' && r.action === 'ACCEPT')) {
+      risks.push('High Risk: Telnet enabled. Insecure protocol; replace with SSH.');
+    }
+    if (state.rules.filter(r => r.action === 'ACCEPT').length < 3) {
+      risks.push('Medium Risk: Few acceptance rules. May block legitimate services, causing unavailability.');
+    }
+    if (risks.length === 0) {
+      risks.push('Configuration appears secure. No critical risks identified based on current rules.');
+    }
+
+    risks.forEach(risk => {
+      htmlContent += `<li style="color: black;">${risk}</li>`;
+    });
+
+    htmlContent += `
+        </ul>
+        <hr style="border-color: #ccc;">
+
+        <h2 style="color: black;">Recommendations</h2>
+        <p style="color: black;">Suggestions to improve security and compliance:</p>
+        <ul style="color: black;">
+          <li>Enable firewall logging for auditing (iptables -A INPUT -j LOG). Aligns with ISO 27001 A.12.4 - Logging and monitoring.</li>
+          <li>Perform regular firewall rule reviews. Implement controlled changes.</li>
+          <li>Use fail2ban or similar for protection against automated attacks.</li>
+          <li>Consider implementing web application firewall (WAF) for additional protection.</li>
+          <li>Restrict administrative access to specific IPs and use VPN for remote connections.</li>
+          <li>Monitor logs regularly to detect intrusion attempts.</li>
+          <li>Ensure all sensitive communications use encryption (HTTPS, SSH).</li>
+          <li>Conduct periodic penetration tests to validate rule effectiveness.</li>
+        </ul>
+        <hr style="border-color: #ccc;">
+
+        <p style="font-size: 10px; color: #333;">Generated by GigaShield - osvaldo@perito.digital | perito.digital<br>
+        LinkedIn: linkedin.com/in/ojaneri | GitHub: github.com/ojaneri/gigashield</p>
+      </div>
+    `;
+
+    // Sanitize HTML content with DOMPurify
+    htmlContent = DOMPurify.sanitize(htmlContent);
+
+    // Use jsPDF html method to render HTML
+    doc.html(htmlContent, {
+      callback: function (doc) {
+        doc.save('relatorio-executivo.pdf');
+      },
+      x: 10,
+      y: 10,
+      width: 190,
+      windowWidth: 650
+    });
+  }
 
   function openModal(chainPreset) {
     if (chainPreset) {
@@ -1599,10 +1977,10 @@
         lane.classList.add("empty");
         lane.textContent =
           chain === "INPUT"
-            ? "Arraste regras pra cá ou clique em \"+ regra\"."
+            ? translations[currentLang]['input-empty']
             : chain === "OUTPUT"
-            ? "Controle conexões que o servidor inicia."
-            : "Use se o servidor estiver roteando tráfego.";
+            ? translations[currentLang]['output-empty']
+            : translations[currentLang]['forward-empty'];
       } else {
         lane.classList.remove("empty");
         rules.forEach(rule => {
@@ -1616,7 +1994,7 @@
               <div class="rule-left">
                 <div class="rule-handle">⋮⋮</div>
                 <div>
-                  <div class="rule-title">${rule.action} ${rule.proto.toUpperCase()}${rule.port ? " · porta " + rule.port : ""}</div>
+                  <div class="rule-title">${rule.action} ${rule.proto.toUpperCase()}${rule.port ? " · " + translations[currentLang]['port'] + rule.port : ""}</div>
                   <div class="rule-badges">
                     <span class="rule-badge proto">${rule.proto.toUpperCase()}</span>
                     <span class="rule-badge action-${rule.action}">${rule.action}</span>
@@ -1626,8 +2004,8 @@
               </div>
             </div>
             <div class="rule-meta">
-              <span>Origem: ${rule.src}</span>
-              <span>Destino: ${rule.dst}</span>
+              <span>${translations[currentLang]['rule-origin']} ${rule.src}</span>
+              <span>${translations[currentLang]['rule-destination']} ${rule.dst}</span>
             </div>
             <div class="rule-actions">
               <button class="btn-icon btn-icon-danger" data-action="remove">✕</button>
@@ -1712,6 +2090,7 @@
     toolbarMeta.textContent =
       `Tabela: ${state.table} · ${total} regra(s) · ${accept} ACCEPT · ${drop} DROP/REJECT. ` +
       `Arraste cards entre INPUT, OUTPUT e FORWARD.`;
+    // Note: This is dynamic, but since it's not translatable yet, leave for now. Perhaps add to translations later.
   }
 
   function buildPortCounts(actionFilter) {
@@ -1734,7 +2113,7 @@
       container.innerHTML = "";
       if (data.length === 0) {
         container.innerHTML =
-          '<div style="font-size:10px;color:var(--text-muted);opacity:.8;">Sem dados ainda.</div>';
+          '<div style="font-size:10px;color:var(--text-muted);opacity:.8;">' + translations[currentLang]['no-data'] + '</div>';
         return;
       }
       const max = Math.max(...data.map(d => d[1]));
@@ -1772,7 +2151,7 @@
     stackedChains.innerHTML = "";
     if (total === 0) {
       stackedChains.innerHTML =
-        '<div style="font-size:10px;color:var(--text-muted);text-align:center;padding-top:2px;">Nenhuma regra ainda.</div>';
+        '<div style="font-size:10px;color:var(--text-muted);text-align:center;padding-top:2px;">' + translations[currentLang]['no-data'] + '</div>';
     } else {
       ["INPUT", "OUTPUT", "FORWARD"].forEach(chain => {
         if (!counts[chain]) return;
@@ -1787,7 +2166,7 @@
   function exportCommands() {
     if (state.rules.length === 0) {
       terminalBody.textContent =
-        "# Nenhuma regra definida para a tabela " + state.table + ".";
+        translations[currentLang]['no-rules'] + state.table + ".";
       summaryLastExport.textContent = new Date().toLocaleTimeString();
       return;
     }
@@ -1863,7 +2242,7 @@
           src,
           dst,
           action: target.toUpperCase(),
-          note: "importado do iptables"
+          note: translations[currentLang]['imported']
         });
       }
     }
@@ -1874,15 +2253,15 @@
   function importFromIptables() {
     const raw = textareaIptables.value.trim();
     if (!raw) {
-      terminalBody.textContent = "# Nada para importar. Cole a saída do iptables.";
+      terminalBody.textContent = translations[currentLang]['nothing-to-import'];
       return;
     }
 
     const parsed = parseIptablesText(raw);
     if (!parsed.length) {
       terminalBody.textContent =
-        "# Não foi possível interpretar a saída do iptables.\n" +
-        "# Verifique se usou: sudo iptables -L -n -v --line-numbers\n";
+        translations[currentLang]['cannot-interpret'] + "\n" +
+        translations[currentLang]['use-command'] + "\n";
       return;
     }
 
@@ -1890,7 +2269,7 @@
     state.rules = parsed;
     renderAll();
     terminalBody.textContent =
-      "# Importadas " + parsed.length + " regras das chains INPUT/OUTPUT/FORWARD.\n" +
+      translations[currentLang]['imported-rules'] + parsed.length + translations[currentLang]['rules-from-chains'] + "\n" +
       "# Agora você pode arrastar, editar e gerar o preview de comandos.";
   }
 
@@ -1936,6 +2315,8 @@
     importFromIptables();
   });
 
+  btnPdf.addEventListener("click", generatePDF);
+
   function seedSampleRules() {
     state.rules = [
       {
@@ -1946,7 +2327,7 @@
         src: "192.168.0.0/24",
         dst: "este host",
         action: "ACCEPT",
-        note: "SSH interno"
+        note: translations[currentLang]['internal-ssh']
       },
       {
         id: "sample2",
@@ -1956,7 +2337,7 @@
         src: "0.0.0.0/0",
         dst: "este host",
         action: "ACCEPT",
-        note: "HTTP público"
+        note: translations[currentLang]['external-http']
       },
       {
         id: "sample3",
@@ -1966,7 +2347,7 @@
         src: "0.0.0.0/0",
         dst: "este host",
         action: "DROP",
-        note: "Bloquear Telnet"
+        note: translations[currentLang]['block-telnet']
       },
       {
         id: "sample4",
@@ -1976,11 +2357,12 @@
         src: "este host",
         dst: "0.0.0.0/0",
         action: "ACCEPT",
-        note: "HTTPS saída"
+        note: translations[currentLang]['outgoing-https']
       }
     ];
   }
 
+  updateTexts();
   seedSampleRules();
   renderAll();
 </script>
