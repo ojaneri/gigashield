@@ -5,7 +5,7 @@
   <title data-lang="page-title">GigaShield – Visual</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <style>
+<style>
     :root {
       --bg-main: #050816;
       --bg-elevated: #050816;
@@ -1106,9 +1106,25 @@
     }
 
   </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+  <!--
+    GigaShield – Single‑file UI
+
+    This HTML file contains the entire GigaShield frontend:
+    - Layout and visual components (sidebar, lanes, charts, modal)
+    - Styling (CSS, including dark theme and interaction states)
+    - Behaviour (vanilla JavaScript for drag‑and‑drop, summaries, charts,
+      iptables import/export and PDF generation)
+
+    There is deliberately no backend code here. All data is kept in memory
+    in the browser and nothing is applied directly to the operating system.
+  -->
+  <!-- External libraries used by the JavaScript section:
+       - jsPDF: generate the executive PDF report
+       - html2canvas: kept for possible future screenshot/export features
+       - DOMPurify: sanitise dynamic HTML before feeding it to jsPDF       -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
 </head>
 <body>
 
@@ -1497,6 +1513,20 @@
 </div>
 
 <script>
+  /**
+   * UI translations for all visible, user‑facing strings.
+   *
+   * Keys in this object are referenced via the `data-lang` attribute on
+   * HTML elements. When the language changes we look up the current value
+   * using `translations[currentLang][key]`.
+   *
+   * - `pt`: Brazilian Portuguese
+   * - `en`: English
+   *
+   * If you add a new UI label:
+   * 1. Add a `data-lang="your-key"` attribute to the HTML element.
+   * 2. Add the same key to each language block below.
+   */
   const translations = {
     pt: {
       'brand-title': 'GigaShield',
@@ -1672,11 +1702,31 @@
     }
   };
 
+  // Currently selected language. Defaults to Portuguese.
   let currentLang = 'pt';
 
+  /**
+   * In‑memory application state.
+   *
+   * - `table`: currently selected iptables table (e.g. "filter", "nat").
+   *            Only "filter" is fully supported today.
+   * - `rules`: array of logical firewall rules created or imported by the user.
+   *
+   * Each rule has the following shape:
+   * {
+   *   id:    string   Unique identifier for UI operations.
+   *   chain: "INPUT" | "OUTPUT" | "FORWARD"
+   *   proto: string   Protocol, usually "tcp" | "udp" | "icmp" | "all".
+   *   port:  string   Destination port (may be empty for non‑port rules).
+   *   src:   string   Source CIDR / host.
+   *   dst:   string   Destination CIDR / host.
+   *   action:"ACCEPT" | "DROP" | "REJECT"
+   *   note:  string   Optional human‑readable description.
+   * }
+   */
   const state = {
     table: "filter",
-    rules: [] // { id, chain, proto, port, src, dst, action, note }
+    rules: []
   };
 
   const chips = document.querySelectorAll("#table-chips .chip");
@@ -1734,6 +1784,16 @@
     renderAll();
   });
 
+  /**
+   * Update all visible text according to the current language.
+   *
+   * This function scans the DOM for elements that declare `data-lang`
+   * and replaces either:
+   *  - `textContent` for normal elements, or
+   *  - `placeholder` for form inputs / textareas.
+   *
+   * For the `<title>` element we update `document.title` instead.
+   */
   function updateTexts() {
     document.querySelectorAll('[data-lang]').forEach(el => {
       const key = el.getAttribute('data-lang');
@@ -1750,8 +1810,24 @@
     document.documentElement.lang = currentLang === 'pt' ? 'pt-BR' : 'en';
   }
 
+  // Reference to the card currently being dragged in the lanes, or null.
   let draggingCard = null;
 
+  /**
+   * Generate an executive‑style PDF report describing the current firewall.
+   *
+   * The report contains:
+   *  - High‑level overview and context.
+   *  - Explanation of INPUT / OUTPUT / FORWARD chains.
+   *  - Per‑rule description including a business‑oriented impact summary.
+   *  - Port and service mapping for common ports.
+   *  - Simple risk analysis based on heuristic checks.
+   *  - General security recommendations and ISO 27001 references.
+   *
+   * All content is generated on the client side and then:
+   *  1. Sanitised via DOMPurify.
+   *  2. Rendered as a PDF by jsPDF.
+   */
   function generatePDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -1919,6 +1995,13 @@
     });
   }
 
+  /**
+   * Open the "new rule" modal.
+   *
+   * @param {string | undefined} chainPreset
+   *        Optional chain name (INPUT/OUTPUT/FORWARD) used to preselect
+   *        the chain when the modal is opened from a specific lane.
+   */
   function openModal(chainPreset) {
     if (chainPreset) {
       fieldChain.value = chainPreset;
@@ -1932,10 +2015,22 @@
     modalBackdrop.style.display = "flex";
   }
 
+  /**
+   * Close (hide) the rule‑creation modal.
+   */
   function closeModal() {
     modalBackdrop.style.display = "none";
   }
 
+  /**
+   * Create a new rule object from the modal form fields and push it
+   * into the global `state.rules` collection.
+   *
+   * This function:
+   *  - Normalises empty values (e.g. default src/dst).
+   *  - Generates a unique `id` for UI operations.
+   *  - Re‑renders the UI and closes the modal afterwards.
+   */
   function addRuleFromModal() {
     const chain = fieldChain.value || "INPUT";
     const action = fieldAction.value || "ACCEPT";
@@ -1961,12 +2056,27 @@
     closeModal();
   }
 
+  /**
+   * Render all visual areas that depend on the rules state:
+   *  - Lanes and rule cards.
+   *  - Summary counters.
+   *  - Charts.
+   */
   function renderAll() {
     renderLanes();
     updateSummary();
     renderCharts();
   }
 
+  /**
+   * Render the three rule lanes (INPUT, OUTPUT, FORWARD).
+   *
+   * Responsibilities:
+   *  - Populate each lane with the rules bound to its chain.
+   *  - Attach drag‑and‑drop behaviour so rules can move between chains.
+   *  - Attach delete buttons for individual rules.
+   *  - Keep the visual counters in sync with the underlying state.
+   */
   function renderLanes() {
     ["INPUT", "OUTPUT", "FORWARD"].forEach(chain => {
       const lane = laneBodies[chain];
@@ -2072,6 +2182,15 @@
     });
   }
 
+  /**
+   * Update the numeric summary on the sidebar and the toolbar meta text.
+   *
+   * Values include:
+   *  - Total rules.
+   *  - ACCEPT vs DROP/REJECT counts.
+   *  - Number of active chains.
+   *  - Currently selected iptables table.
+   */
   function updateSummary() {
     const total = state.rules.length;
     const accept = state.rules.filter(r => r.action === "ACCEPT").length;
@@ -2093,6 +2212,15 @@
     // Note: This is dynamic, but since it's not translatable yet, leave for now. Perhaps add to translations later.
   }
 
+  /**
+   * Aggregate rule counts per destination port for a given action type.
+   *
+   * @param {"ACCEPT" | "DROP"} actionFilter
+   *        "ACCEPT" counts only accepted rules,
+   *        "DROP"   counts both DROP and REJECT rules.
+   * @returns {Array<[string, number]>}
+   *          Sorted list of `[port, count]`, limited to the top 5 ports.
+   */
   function buildPortCounts(actionFilter) {
     const map = {};
     state.rules.forEach(r => {
@@ -2105,6 +2233,15 @@
     return entries.slice(0, 5);
   }
 
+  /**
+   * Render all chart‑like visualisations:
+   *  - Top ports for ACCEPT rules.
+   *  - Top ports for DROP/REJECT rules.
+   *  - Stacked bar distribution across INPUT/OUTPUT/FORWARD.
+   *
+   * Charts are built using simple DOM elements instead of a chart library
+   * to keep the project self‑contained.
+   */
   function renderCharts() {
     const acceptPorts = buildPortCounts("ACCEPT");
     const dropPorts = buildPortCounts("DROP");
@@ -2163,6 +2300,13 @@
     }
   }
 
+  /**
+   * Build an iptables command preview based on the current rule set
+   * and print it into the "terminal" area on the right.
+   *
+   * Generated commands are *not* executed – they are meant to be copied
+   * into a real shell script or applied manually on the target system.
+   */
   function exportCommands() {
     if (state.rules.length === 0) {
       terminalBody.textContent =
@@ -2199,7 +2343,23 @@
     summaryLastExport.textContent = new Date().toLocaleTimeString();
   }
 
-  // Parser simples para saída do "iptables -L -n -v --line-numbers"
+  // Simple parser for the output of `iptables -L -n -v --line-numbers`.
+  /**
+   * Parse textual output from `iptables -L -n -v --line-numbers` and
+   * convert it into an array of rule objects compatible with `state.rules`.
+   *
+   * The parser is intentionally heuristic and focuses on:
+   *  - The "filter" table.
+   *  - INPUT, OUTPUT and FORWARD chains.
+   *  - Basic extraction of protocol, source, destination and ports.
+   *
+   * For production‑grade parsing, consider replacing this logic with a
+   * backend that processes `iptables-save` output and then feeds JSON
+   * back into this UI.
+   *
+   * @param {string} text Raw iptables listing.
+   * @returns {Array<Object>} Parsed rules.
+   */
   function parseIptablesText(text) {
     const lines = text.split(/\r?\n/);
     const parsed = [];
@@ -2250,6 +2410,15 @@
     return parsed;
   }
 
+  /**
+   * Replace the current in‑memory rules with rules parsed from the
+   * textarea containing iptables output.
+   *
+   * The function updates:
+   *  - The `state.table` (forces it to "filter").
+   *  - The main UI rendering.
+   *  - The textual feedback in the terminal preview area.
+   */
   function importFromIptables() {
     const raw = textareaIptables.value.trim();
     if (!raw) {
@@ -2317,6 +2486,13 @@
 
   btnPdf.addEventListener("click", generatePDF);
 
+  /**
+   * Seed the UI with a small set of demo rules so that new users
+   * immediately see how the dashboard behaves without having to
+   * create or import anything.
+   *
+   * This function is invoked once on initial load.
+   */
   function seedSampleRules() {
     state.rules = [
       {
